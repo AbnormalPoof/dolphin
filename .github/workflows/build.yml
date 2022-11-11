@@ -160,13 +160,8 @@ jobs:
         mkdir -p ${{ env.ARCHIVE_PATH }}/Products/Applications/
         cp -R "${{ github.workspace }}/build-Xcode/Release (Patreon Non-Jailbroken)-iphoneos/DolphiniOS.app" ${{ env.ARCHIVE_PATH }}/Products/Applications/
         "Source/iOS/DolphiniOS/Common/Build Resources/Scripts/BuildIpa.sh" build.keychain NJB_PATREON_IPA_PATH
-        
-    - name: Upload
-      env:
-        S3CMD_ARGS: "--access_key=${{ secrets.SPACES_KEY }} --secret_key=${{ secrets.SPACES_SECRET }} --host=${{ secrets.SPACES_ENDPOINT }} --host-bucket=${{ secrets.S3_BUCKET }}"
-        BUCKET_ROOT_PATH: "s3://builds"
-      run: |
-        s3cmd put ${{ env.NJB_IPA_PATH }}/DolphiniOS-NJB.ipa ${{ env.BUCKET_ROOT_PATH }}/DolphiniOS-NJB-${{ github.run_number }}.ipa ${{ env.S3CMD_ARGS }}
-        s3cmd put ${{ env.NJB_IPA_PATH }}/DolphiniOS-NJB-Universal.ipa ${{ env.BUCKET_ROOT_PATH }}/DolphiniOS-NJB-Universal-${{ github.run_number }}.ipa ${{ env.S3CMD_ARGS }}
-        s3cmd put ${{ env.NJB_PATREON_IPA_PATH }}/DolphiniOS-NJB.ipa ${{ env.BUCKET_ROOT_PATH }}/DolphiniOS-NJB-Beta-${{ github.run_number }}.ipa ${{ env.S3CMD_ARGS }}
-        s3cmd put ${{ env.NJB_PATREON_IPA_PATH }}/DolphiniOS-NJB-Universal.ipa ${{ env.BUCKET_ROOT_PATH }}/DolphiniOS-NJB-Beta-Universal-${{ github.run_number }}.ipa ${{ env.S3CMD_ARGS }}
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: DolphiniOS-NJB.ipa
+        path: ${{ env.NJB_IPA_PATH }}/DolphiniOS-NJB.ipa
